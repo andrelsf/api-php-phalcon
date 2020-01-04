@@ -1,0 +1,41 @@
+version: "3.5"
+
+networks:
+  net-phalcon:
+    name: php-phalcon
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.70.0.0/24
+
+services:
+  php-phalcon-api:
+    build: .docker/apache
+    env_file:
+      - ./app-phalcon/.env
+    volumes:
+      - ./app-phalcon:/usr/src/app
+    ports:
+      - "80:80"
+    links:
+      - db-app-phalcon
+    restart:
+      on-failure
+    networks:
+      net-phalcon:
+        ipv4_address: "172.70.0.2"
+
+  db-app-phalcon:
+    build: .docker/mysql/docker/
+    env_file:
+      - .docker/mysql/.env
+    volumes:
+      - .docker/mysql/data:/var/lib/mysql
+    expose:
+      - 3306
+    restart:
+      on-failure
+    networks:
+      net-phalcon:
+        ipv4_address: "172.70.0.3"

@@ -1,0 +1,29 @@
+{
+    "name": "andrelsf/phalcon",
+    "description": "Learning PHP Phalcon",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Andre Ferreira",
+            "email": "andre.dev.linux@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.2",
+        "ext-phalcon": "~4.0.0",
+        "vlucas/phpdotenv": "^3.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\Phalcon\\": "src/"
+        },
+        "files": [
+            "src/Helpers.php"
+        ]
+    },
+    "archive": {
+        "exclude": [
+            ".dockerignore"
+        ]
+    }
+}

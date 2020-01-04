@@ -1,0 +1,7 @@
+.idea
+.docker/mysql/data
+.docker/mysql/.env
+app-phalcon/vendor
+app-phalcon/var
+app-phalcon/.env
+app-phalcon/composer.lock
