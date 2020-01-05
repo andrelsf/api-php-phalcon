@@ -3,7 +3,6 @@
 namespace App\Phalcon\Controllers;
 
 use Phalcon\Mvc\Micro;
-use App\Phalcon\Models\Robots;
 use Phalcon\Http\Response;
 
 class RobotsController extends Micro
