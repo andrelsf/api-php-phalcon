@@ -41,7 +41,7 @@ class RobotsController extends Micro
             );
 
             return $response;
-        } catch(Phalcon\Db\Exception $e) {
+        } catch (Phalcon\Db\Exception $e) {
             print($e->getTrace());
         }
     }
@@ -91,7 +91,8 @@ class RobotsController extends Micro
         $phql = "SELECT * FROM App\Phalcon\Models\Robots WHERE id = :id:";
 
         $robot = $this->modelsManager->executeQuery(
-            $phql, [ 'id' => $id ]
+            $phql,
+            ['id' => $id]
         )->getFirst();
 
         $response = new Response();
@@ -236,35 +237,53 @@ class RobotsController extends Micro
      */
     public function deleteRobotAction(int $id)
     {
-        $phql = "DELETE FROM App\Phalcon\Models\Robots WHERE id = :id:";
+        $phql = "SELECT * FROM App\Phalcon\Models\Robots WHERE id = :id:";
 
-        $status = $this->modelsManager->executeQuery($phql, [ 'id' => $id ]);
+        $robot = $this->modelsManager->executeQuery(
+            $phql,
+            ['id' => $id]
+        )->getFirst();
 
         $response = new Response();
 
-        if ($status->success() === true) {
-            $response->setStatusCode(200, 'success');
+        if ($robot !== null) {
+            $phql = "DELETE FROM App\Phalcon\Models\Robots WHERE id = :id:";
+            $status = $this->modelsManager->executeQuery($phql, array('id' => $id));
+
+            if ($status->success() == true) {
+                $response->setStatusCode(200, 'success');
+                $response->setJsonContent(
+                    [
+                        'status' => 200,
+                        'message' => "robot with ID {$id} deleted",
+                    ],
+                    JSON_PRETTY_PRINT
+                );
+                return $response;
+            }
+
+            $response->setStatusCode(409, 'Conflict');
+
+            $errors = [];
+            foreach ($status->getMessages() as $message) {
+                $errors[] = $message->getMessage();
+            }
+
             $response->setJsonContent(
                 [
-                    'status' => 200,
-                    'message' => "robot with ID {$id} deleted",
+                    'status' => 409,
+                    'error' => $errors,
                 ],
                 JSON_PRETTY_PRINT
             );
-            return $response;
         }
 
         $response->setStatusCode(409, 'Conflict');
 
-        $errors = [];
-        foreach ($status->getMessages() as $message) {
-            $errors[] = $message->getMessage();
-        }
-
         $response->setJsonContent(
             [
                 'status' => 409,
-                'error' => $errors,
+                'error' => "ID not found",
             ],
             JSON_PRETTY_PRINT
         );
