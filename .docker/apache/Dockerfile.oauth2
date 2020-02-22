@@ -3,10 +3,11 @@ FROM    php:7.2-apache
 ENV     APP_DIR=/usr/src/app/
 ENV     APP_DIR_DATA=/usr/src/app/var/cache/metaData
 ENV     APP_DIR_LOGS=/usr/src/app/var/logs/
-#ENV     APP_USER=app
 
 RUN     apt-get update \
         && apt-get install -y git libzip-dev unzip \
+        && pecl install -f -o mongodb \
+        && echo "extension=mongodb.so" > /usr/local/etc/php/conf.d/mongodb.ini \
         && cd /opt/ \
         && git clone https://github.com/jbboehr/php-psr.git \
         && cd php-psr && phpize && ./configure \
@@ -42,4 +43,6 @@ RUN     php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');
         && php -r "if (hash_file('sha384', 'composer-setup.php') === 'c5b9b6d368201a9db6f74e2611495f369991b72d9c8cbd3ffbc63edff210eb73d46ffbfce88669ad33695ef77dc76976') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" \
         && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
         && php -r "unlink('composer-setup.php');" \
+        && composer install \
+        && cd oauth2/ \
         && composer install

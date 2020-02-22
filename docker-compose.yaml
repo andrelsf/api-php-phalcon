@@ -39,3 +39,34 @@ services:
     networks:
       net-phalcon:
         ipv4_address: "172.70.0.3"
+  
+  oauth2-server:
+    build: .docker/apache
+    dockerfile: Dockerfile.oauth2
+    env_file:
+      - ./oauth2-server/.env
+    volumes:
+      - ./oauth2-server:/usr/src/app
+    ports:
+      - "8090:80"
+    links:
+      - db-ouath2-server
+    restart:
+      on-failure
+    networks:
+      net-phalcon:
+        ipv4_address: "172.70.0.4"
+
+  db-ouath2-server:
+    build: .docker/mysql_oauth2/docker/
+    env_file:
+      - .docker/mysql_oauth2/.env
+    volumes:
+      - .docker/mysql_oauth2/data:/var/lib/mysql
+    expose:
+      - 3306
+    restart:
+      on-failure
+    networks:
+      net-phalcon:
+        ipv4_address: "172.70.0.5"

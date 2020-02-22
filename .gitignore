@@ -1,7 +1,13 @@
 .idea
 .docker/mysql/data
+.docker/mysql_oauth2/data
 .docker/mysql/.env
+.docker/mysql_oauth2/.env
 app-phalcon/vendor
+oauth2-server/vendor
 app-phalcon/var
+oauth2-server/var
 app-phalcon/.env
+oauth2-server/.env
 app-phalcon/composer.lock
+oauth2-server/composer.lock
